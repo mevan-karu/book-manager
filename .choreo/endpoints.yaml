@@ -1,0 +1,10 @@
+# Choreo Endpoints Configuration
+version: "0.1"
+
+endpoints:
+  - name: book-manager-api
+    port: 3000
+    type: REST
+    context: /
+    schemaFilePath: openapi.yaml
+    networkVisibility: Project

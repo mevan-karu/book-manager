@@ -1,0 +1,169 @@
+openapi: 3.0.3
+info:
+  title: Book Manager API
+  description: A simple REST API for managing books built with Express.js
+  version: 1.0.0
+  contact:
+    name: Book Manager API Support
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+
+paths:
+  /:
+    get:
+      summary: API Health Check
+      description: Get API information and available endpoints
+      operationId: getApiInfo
+      responses:
+        '200':
+          description: API information retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Book Manager API is running"
+                  version:
+                    type: string
+                    example: "1.0.0"
+                  endpoints:
+                    type: object
+
+  /books:
+    get:
+      summary: Get all books
+      description: Retrieve all books from the bookstore
+      operationId: getAllBooks
+      responses:
+        '200':
+          description: Books retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Books retrieved successfully"
+                  count:
+                    type: integer
+                    example: 2
+                  books:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Book'
+
+    post:
+      summary: Add a new book
+      description: Add a new book to the bookstore with auto-generated ID
+      operationId: addBook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - author
+              properties:
+                name:
+                  type: string
+                  description: The name/title of the book
+                  example: "The Great Gatsby"
+                author:
+                  type: string
+                  description: The author of the book
+                  example: "F. Scott Fitzgerald"
+      responses:
+        '201':
+          description: Book added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Book added successfully"
+                  book:
+                    $ref: '#/components/schemas/Book'
+        '400':
+          description: Bad request - missing required fields
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /books/{id}:
+    get:
+      summary: Get a specific book by ID
+      description: Retrieve a specific book from the bookstore using its ID
+      operationId: getBookById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The unique identifier of the book
+          schema:
+            type: string
+            format: uuid
+            example: "123e4567-e89b-12d3-a456-426614174000"
+      responses:
+        '200':
+          description: Book retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Book retrieved successfully"
+                  book:
+                    $ref: '#/components/schemas/Book'
+        '404':
+          description: Book not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    Book:
+      type: object
+      required:
+        - id
+        - name
+        - author
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Auto-generated unique identifier for the book
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        name:
+          type: string
+          description: The name/title of the book
+          example: "The Great Gatsby"
+        author:
+          type: string
+          description: The author of the book
+          example: "F. Scott Fitzgerald"
+
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: Error message describing what went wrong
+          example: "Both name and author are required"

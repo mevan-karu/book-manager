@@ -1,0 +1,4 @@
+# Choreo configuration for Book Manager API
+implementation:
+  container:
+    image: book-manager:latest
