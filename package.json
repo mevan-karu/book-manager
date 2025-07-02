@@ -8,7 +8,7 @@
     "dev": "nodemon app.js"
   },
   "keywords": ["express", "api", "books", "manager"],
-  "author": "Book Manager Team",
+  "author": "",
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0",
